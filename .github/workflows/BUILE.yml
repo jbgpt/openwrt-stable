@@ -63,10 +63,10 @@ jobs:
         git clone https://github.com/openwrt/openwrt.git
         cd openwrt
         git checkout ${{ env.OPENWRT_VERSION }}
-        run: sed -i 's/OPENWRT_VERSION:=snapshot/OPENWRT_VERSION:=${{ env.OPENWRT_VERSION }}/' include/version.mk
+        sed -i 's/OPENWRT_VERSION:=snapshot/OPENWRT_VERSION:=${{ env.OPENWRT_VERSION }}/' include/version.mk
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt 
         #git clone $REPO_URL -b $REPO_BRANCH openwrt
-        #run: sed -i 's/OPENWRT_VERSION:=snapshot/OPENWRT_VERSION:=${{ env.OPENWRT_VERSION }}/' include/version.mk
+        #sed -i 's/OPENWRT_VERSION:=snapshot/OPENWRT_VERSION:=${{ env.OPENWRT_VERSION }}/' include/version.mk
 
     - name: Load custom feeds
       run: |
