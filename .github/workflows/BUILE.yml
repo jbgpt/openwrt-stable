@@ -38,7 +38,7 @@ jobs:
     - name: Checkout OpenWrt Code
       uses: actions/checkout@v4
     - name: Set OpenWrt version
-      run: echo "OPENWRT_VERSION=24.10.0" >> $GITHUB_ENV
+      run: echo "OPENWRT_VERSION=v24.10.0" >> $GITHUB_ENV
         
         #submodules: recursive
 
