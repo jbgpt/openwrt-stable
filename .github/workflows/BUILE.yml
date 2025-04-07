@@ -10,7 +10,7 @@
 # See /LICENSE for more information.
 #
 
-name: OpenWrt Fclash
+name: OpenWrt Fclashvef
 
 on:
   repository_dispatch:
@@ -36,18 +36,11 @@ jobs:
     steps:      
     - name: Checkout OpenWrt Code
       uses: actions/checkout@v4
-      with:
-        ref: v24.10 # 指定稳定版标签
+    - name: Set OpenWrt version
+      run: echo "OPENWRT_VERSION=24.10.0" >> $GITHUB_ENV
+        
         #submodules: recursive
-  # 启用 BBR 的核心配置
-    - name: Enable BBR
-      run: |
-          # echo "CONFIG_PACKAGE_kmod-tcp-bbr=y" >> ${{ env.CONFIG_FILE }}
-          echo "CONFIG_DEFAULT_TCP_CONG=\"bbr\"" >> ${{ env.CONFIG_FILE }}
-          # 可选：启用 fq 队列（BBR 推荐搭配）
-          echo "CONFIG_PACKAGE_kmod-sched-core=y" >> ${{ env.CONFIG_FILE }}
-          echo "CONFIG_PACKAGE_kmod-sched-fq_codel=y" >> ${{ env.CONFIG_FILE }}
-         
+  
     - name: Initialization environment
       env:
         DEBIAN_FRONTEND: noninteractive
@@ -66,22 +59,32 @@ jobs:
       working-directory: /workdir
       run: |
         df -hT $PWD
-        git clone $REPO_URL -b $REPO_BRANCH openwrt
-        ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
-
+        git clone https://github.com/openwrt/openwrt.git
+        ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt 
+        #git clone $REPO_URL -b $REPO_BRANCH openwrt
+        
     - name: Load custom feeds
       run: |
         [ -e $FEEDS_CONF ] && mv $FEEDS_CONF openwrt/feeds.conf.default
         chmod +x $DIY_P1_SH
         cd openwrt
         $GITHUB_WORKSPACE/$DIY_P1_SH
-
+        git checkout ${{ env.OPENWRT_VERSION }}
+        
     - name: Update feeds
       run: cd openwrt && ./scripts/feeds update -a
 
     - name: Install feeds
       run: cd openwrt && ./scripts/feeds install -a
-
+# 启用 BBR 的核心配置
+    - name: Enable BBR
+      run: |
+          # echo "CONFIG_PACKAGE_kmod-tcp-bbr=y" >> ${{ env.CONFIG_FILE }}
+          echo "CONFIG_DEFAULT_TCP_CONG=\"bbr\"" >> ${{ env.CONFIG_FILE }}
+          # 可选：启用 fq 队列（BBR 推荐搭配）
+          echo "CONFIG_PACKAGE_kmod-sched-core=y" >> ${{ env.CONFIG_FILE }}
+          echo "CONFIG_PACKAGE_kmod-sched-fq_codel=y" >> ${{ env.CONFIG_FILE }}
+         
     - name: Load custom configuration
       run: |
         [ -e files ] && mv files openwrt/files
