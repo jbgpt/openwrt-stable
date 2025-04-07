@@ -38,7 +38,7 @@ jobs:
       uses: actions/checkout@v4
       with:
         ref: v24.10.0 # 指定稳定版标签
-        submodules: recursive
+        #submodules: recursive
   # 启用 BBR 的核心配置
     - name: Enable BBR
       run: |
