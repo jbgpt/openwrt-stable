@@ -6,6 +6,7 @@ src-git telephony https://git.openwrt.org/feed/telephony.git
 src-git targets https://github.com/openwrt/targets.git
 src-git kenzo https://github.com/kenzok8/openwrt-packages
 src-git small https://github.com/kenzok8/small.git
+src-git small-package https://github.com/kenzok8/small-package.git
 src-git opentopd  https://github.com/sirpdboy/sirpdboy-package
 
 
