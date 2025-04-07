@@ -41,10 +41,7 @@ jobs:
       run: echo "OPENWRT_VERSION=24.10.0" >> $GITHUB_ENV
         
         #submodules: recursive
-    - name: Checkout specific version
-      run: |
-       cd openwrt
-       git checkout ${{ env.OPENWRT_VERSION }}
+
     - name: Initialization environment
       env:
         DEBIAN_FRONTEND: noninteractive
@@ -64,6 +61,8 @@ jobs:
       run: |
         df -hT $PWD
         git clone https://github.com/openwrt/openwrt.git
+        cd openwrt
+        git checkout ${{ env.OPENWRT_VERSION }}
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt 
         #git clone $REPO_URL -b $REPO_BRANCH openwrt
         
@@ -73,7 +72,6 @@ jobs:
         chmod +x $DIY_P1_SH
         cd openwrt
         $GITHUB_WORKSPACE/$DIY_P1_SH
-        #git checkout ${{ env.OPENWRT_VERSION }}
         
     - name: Update feeds
       run: cd openwrt && ./scripts/feeds update -a
